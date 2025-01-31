@@ -1,10 +1,10 @@
 import numpy as np
-import imageio
+import imageio.v2 as imageio  # Fix for DeprecationWarning
 import cv2
 from scipy.ndimage import gaussian_filter
 
 # Prompt user to enter image path
-img = input("Enter the image file path: ")
+img = input("Enter the image file path: ").strip()
 
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
@@ -14,7 +14,9 @@ def dodge(front, back):
     final_sketch[final_sketch > 255] = 255
     return final_sketch.astype('uint8')
 
-# Read the input image
+# Ensure proper file path format
+img = img.strip('"')  # Remove accidental quotes if pasted
+
 try:
     ss = imageio.imread(img)
     gray_image = rgb2gray(ss)
@@ -26,7 +28,7 @@ try:
 
     output_file = "convert_image.png"
     cv2.imwrite(output_file, r)
-    
+
     print(f"Image successfully converted and saved as {output_file}")
 
 except FileNotFoundError:
